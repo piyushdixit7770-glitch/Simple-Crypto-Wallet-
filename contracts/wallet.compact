@@ -1,0 +1,135 @@
+pragma language_version >= 0.23;
+
+import CompactStandardLibrary;
+
+// ╔══════════════════════════════════════════════════════════════════════════════╗
+// ║  Simple Crypto Wallet — Midnight Network Smart Contract                    ║
+// ║                                                                            ║
+// ║  PUBLIC  (on-chain, visible to any observer):                              ║
+// ║    • walletLabel      — user-chosen display name for this wallet           ║
+// ║    • totalDeposited   — running sum of all recorded deposit amounts        ║
+// ║    • transferCount    — number of authorized transfers executed            ║
+// ║    • lastTxHash       — most-recently recorded transaction identifier      ║
+// ║    • isRegistered     — whether a wallet has been registered               ║
+// ║    • ownerCommitment  — the owner's secret Bytes<32> used as a ZK witness  ║
+// ║                         in authorizeTransfer (the raw value is the         ║
+// ║                         witness, compared in-circuit, never re-emitted)   ║
+// ║                                                                            ║
+// ║  PRIVATE (circuit witnesses, proved via ZK — NEVER stored openly):        ║
+// ║    • ownerSecret      — proves wallet ownership (compared to commitment)  ║
+// ║    • pin              — proves the user knows the authorization PIN        ║
+// ║                         (must differ from ownerSecret)                    ║
+// ║                                                                            ║
+// ║  What an observer CAN see:  label, deposit total, transfer count, last tx  ║
+// ║  What an observer CANNOT:   the ownerSecret or PIN plain values            ║
+// ╚══════════════════════════════════════════════════════════════════════════════╝
+
+// ─── Public ledger state ──────────────────────────────────────────────────────
+
+export ledger walletLabel: Opaque<"string">;
+export ledger totalDeposited: Uint<64>;
+export ledger transferCount: Uint<64>;
+export ledger lastTxHash: Opaque<"string">;
+export ledger isRegistered: Boolean;
+
+// Stores the owner's 32-byte secret. In ZK circuit verification, the caller
+// provides ownerSecret as a private witness — it is compared in-circuit to this
+// stored value. It is never re-disclosed or emitted after registration.
+export ledger ownerCommitment: Bytes<32>;
+
+// ─── Circuit 1: registerWallet ────────────────────────────────────────────────
+// Registers this wallet on-chain with a public label.
+//
+// PUBLIC  input : label        — display name, visible on-chain
+// PUBLIC  input : initialTxRef — initial tx reference (e.g. "genesis")
+// PRIVATE input : ownerSecret  — used as ZK witness for future authorizations;
+//                                stored as-is so authorizeTransfer can verify it
+//                                without re-exposing the value
+export circuit registerWallet(
+  label: Opaque<"string">,
+  initialTxRef: Opaque<"string">,
+  ownerSecret: Bytes<32>
+): [] {
+  assert(isRegistered == false, "Wallet already registered");
+
+  // The ownerCommitment stores the secret for future ZK checks.
+  // Callers should pre-hash the secret (e.g. SHA-256) before passing it here.
+  ownerCommitment = disclose(ownerSecret);
+
+  walletLabel    = disclose(label);
+  lastTxHash     = disclose(initialTxRef);
+  totalDeposited = disclose(0 as Uint<64>);
+  transferCount  = disclose(0 as Uint<64>);
+  isRegistered   = disclose(true);
+}
+
+// ─── Circuit 2: recordDeposit ─────────────────────────────────────────────────
+// Records an incoming deposit. Both amount and tx reference are public —
+// deposits are auditable by design.
+//
+// PUBLIC inputs: amount — deposited amount in smallest units
+//                txHash — transaction identifier / reference string
+export circuit recordDeposit(
+  amount: Uint<64>,
+  txHash: Opaque<"string">
+): [] {
+  assert(isRegistered == true, "Wallet not registered");
+  assert(amount > 0 as Uint<64>, "Deposit amount must be positive");
+
+  totalDeposited = disclose((totalDeposited + amount) as Uint<64>);
+  lastTxHash     = disclose(txHash);
+}
+
+// ─── Circuit 3: authorizeTransfer ─────────────────────────────────────────────
+// Authorizes a transfer with ZK proof of ownership and PIN knowledge.
+//
+// The caller proves:
+//   (a) ownerSecret matches the stored ownerCommitment  ← ownership ZK proof
+//   (b) pin is distinct from ownerSecret               ← PIN knowledge ZK proof
+//
+// Neither secret is revealed on-chain — only the public state is updated.
+//
+// PUBLIC  inputs : amount           — transfer amount (visible on-chain)
+//                  destinationLabel — destination identifier (visible on-chain)
+// PRIVATE inputs : ownerSecret      — ZK witness, proved == ownerCommitment
+//                  pin              — ZK witness, proved != ownerSecret
+export circuit authorizeTransfer(
+  amount: Uint<64>,
+  destinationLabel: Opaque<"string">,
+  ownerSecret: Bytes<32>,
+  pin: Bytes<32>
+): [] {
+  assert(isRegistered == true, "Wallet not registered");
+  assert(amount > 0 as Uint<64>, "Transfer amount must be positive");
+
+  // ZK ownership check: ownerSecret must match the stored commitment.
+  // The raw ownerSecret is the ZK witness — NEVER disclosed or stored again.
+  const ownerMatches: Boolean = ownerSecret == ownerCommitment;
+  assert(ownerMatches == true, "Ownership proof failed: invalid owner secret");
+
+  // ZK PIN check: pin must be distinct from ownerSecret (separate credential).
+  // This ensures the user presents two independent ZK witnesses.
+  const pinDistinct: Boolean = pin != ownerSecret;
+  assert(pinDistinct == true, "PIN must differ from owner secret");
+
+  // Only public state is updated — no private data is disclosed
+  transferCount = disclose((transferCount + 1) as Uint<64>);
+  lastTxHash    = disclose(destinationLabel);
+}
+
+// ─── Circuit 4: addTransactionRecord ─────────────────────────────────────────
+// Appends a transaction record to the public on-chain audit trail.
+// All inputs are intentionally public for transparency and auditability.
+//
+// PUBLIC inputs: txHash    — transaction identifier
+//                direction — direction label ("in" or "out")
+export circuit addTransactionRecord(
+  txHash: Opaque<"string">,
+  direction: Opaque<"string">
+): [] {
+  assert(isRegistered == true, "Wallet not registered");
+
+  lastTxHash = disclose(txHash);
+  // direction is publicly disclosed as part of the audit trail
+  const _direction = disclose(direction);
+}

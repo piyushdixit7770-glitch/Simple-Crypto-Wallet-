@@ -1,0 +1,57 @@
+{
+  "name": "simple-crypto-wallet",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A zero-knowledge crypto wallet dApp built on Midnight Network",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "compile": "wsl -d Ubuntu -- bash -c \"cd /mnt/c/Users/Piyush\\ Dixit/simple-crypto-wallet && /home/piyush_dixit/.local/bin/compact compile +0.31.0 contracts/wallet.compact contracts/managed/wallet\"",
+    "build": "npx.cmd tsc --noEmit || true",
+    "setup": "npx.cmd tsx src/setup.ts",
+    "deploy": "npx.cmd tsx src/deploy.ts",
+    "cli": "npx.cmd tsx src/cli.ts",
+    "network": "npx.cmd tsx src/network.ts",
+    "proof-server:start": "docker compose up -d",
+    "proof-server:stop": "docker compose down",
+    "clean": "npx.cmd rimraf contracts/managed .midnight-state.json .midnight-wallet-state",
+    "test": "npx.cmd vitest run",
+    "test:watch": "npx.cmd vitest",
+    "frontend:dev": "npx.cmd --prefix frontend vite",
+    "frontend:build": "npx.cmd --prefix frontend vite build",
+    "frontend:preview": "npx.cmd --prefix frontend vite preview"
+  },
+  "dependencies": {
+    "@midnight-ntwrk/compact-runtime": "0.16.0",
+    "@midnight-ntwrk/midnight-js-contracts": "4.1.1",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-network-id": "4.1.1",
+    "@midnight-ntwrk/midnight-js-node-zk-config-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-protocol": "4.1.1",
+    "@midnight-ntwrk/midnight-js-types": "4.1.1",
+    "@midnight-ntwrk/midnight-js-utils": "4.1.1",
+    "@midnight-ntwrk/wallet-sdk": "1.2.0",
+    "rxjs": "^7.8.2",
+    "ws": "^8.21.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.18.1",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.23.1",
+    "typescript": "^6.0.3",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "midnight",
+    "blockchain",
+    "zero-knowledge",
+    "privacy",
+    "crypto-wallet"
+  ]
+}

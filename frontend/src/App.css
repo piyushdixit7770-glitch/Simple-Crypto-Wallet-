@@ -1,0 +1,599 @@
+/* ── App.css — Simple Crypto Wallet styles ── */
+
+/* ─── CSS Custom Properties ─────────────────────────────────────────────────── */
+:root {
+  --color-bg: #0d0d1a;
+  --color-surface: #13132b;
+  --color-surface-2: #1a1a38;
+  --color-border: #2a2a50;
+  --color-text: #e8e8f8;
+  --color-text-muted: #8888b0;
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f52d1;
+  --color-secondary: #374151;
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-private: #8b5cf6;
+  --color-public: #06b6d4;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 2px 16px rgba(0, 0, 40, 0.5);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+}
+
+/* ─── App Layout ─────────────────────────────────────────────────────────────── */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 1.25rem 0;
+}
+
+.app-header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.app-logo h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.app-tagline {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.2rem;
+}
+
+.app-main {
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.app-footer {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.app-footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.app-footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-privacy {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--color-secondary);
+  color: var(--color-text);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: #4b5563;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.btn-sm {
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
+}
+
+/* ─── Cards ──────────────────────────────────────────────────────────────────── */
+
+.wallet-connect-card,
+.dashboard-card,
+.actions-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+/* ─── Network Badge ──────────────────────────────────────────────────────────── */
+
+.network-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: var(--color-public);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  margin-bottom: 1rem;
+  letter-spacing: 0.04em;
+}
+
+.network-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--color-success);
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ─── Wallet Connect ─────────────────────────────────────────────────────────── */
+
+.wallet-prompt {
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.wallet-connected {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.wallet-status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wallet-name {
+  font-weight: 600;
+  color: var(--color-success);
+}
+
+.wallet-address {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.address-label {
+  margin-right: 0.3rem;
+}
+
+.address-value {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.82rem;
+  background: var(--color-surface-2);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+.wallet-error {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+
+.wallet-error--mismatch {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.error-message {
+  color: var(--color-error);
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.wallet-error--mismatch .error-message {
+  color: var(--color-warning);
+}
+
+.error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.error-hint {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.link {
+  color: var(--color-primary);
+  font-size: 0.85rem;
+}
+
+.wallet-connecting {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ─── Dashboard ──────────────────────────────────────────────────────────────── */
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.dashboard-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.dashboard-empty h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.state-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.state-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.6rem 0.75rem;
+  background: var(--color-surface-2);
+  border-radius: var(--radius-sm);
+  gap: 1rem;
+}
+
+.state-row--highlight {
+  border-left: 3px solid var(--color-primary);
+}
+
+.state-label {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.state-value {
+  font-size: 0.9rem;
+  text-align: right;
+  word-break: break-all;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.82rem;
+}
+
+.text-sm {
+  font-size: 0.8rem;
+}
+
+.muted {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* ─── Actions ─────────────────────────────────────────────────────────────────── */
+
+.actions-card h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.actions-locked {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.action-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tab-btn:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  color: var(--color-text);
+}
+
+.tab-btn--active {
+  border-color: var(--color-primary);
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--color-text);
+}
+
+.tab-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── Action Panels ──────────────────────────────────────────────────────────── */
+
+.action-panel {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.action-panel h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.panel-note {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.field span:first-child,
+.field legend {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-text);
+  font-size: inherit;
+  border: none;
+  padding: 0;
+}
+
+.field input[type='text'],
+.field input[type='number'],
+.field input[type='password'] {
+  padding: 0.55rem 0.8rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.field input:disabled {
+  opacity: 0.5;
+}
+
+.field-hint {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.2rem 0;
+}
+
+/* ─── Badges ─────────────────────────────────────────────────────────────────── */
+
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.1rem 0.5rem;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge--public {
+  background: rgba(6, 182, 212, 0.12);
+  color: var(--color-public);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+}
+
+.badge--private {
+  background: rgba(139, 92, 246, 0.12);
+  color: var(--color-private);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* ─── Privacy Badge ──────────────────────────────────────────────────────────── */
+
+.privacy-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: rgba(139, 92, 246, 0.06);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.privacy-badge--form {
+  margin-bottom: 0.25rem;
+}
+
+/* ─── Call Status ────────────────────────────────────────────────────────────── */
+
+.call-status {
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.call-status--pending {
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.call-status--success {
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.call-status--error {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.tx-id {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  word-break: break-all;
+}
+
+.privacy-note {
+  font-size: 0.8rem;
+  color: var(--color-private);
+}
+
+/* ─── Spinner ────────────────────────────────────────────────────────────────── */
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+.spinner--sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .app-main { padding: 1.25rem 1rem; }
+  .wallet-connect-card,
+  .dashboard-card,
+  .actions-card { padding: 1rem; }
+  .action-tabs { flex-direction: column; }
+  .state-row { flex-direction: column; gap: 0.3rem; }
+  .state-value { text-align: left; }
+}
