@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Simple Crypto Wallet
 
 A zero-knowledge cryptocurrency wallet dApp built on **Midnight Network** — a data-protection blockchain that uses the **Compact** smart contract language. The wallet lets users register a wallet identity on-chain, record deposits, authorize transfers with ZK-proved credentials, and maintain an auditable transaction history — all while keeping ownership secrets and PINs completely private.
@@ -183,3 +184,6 @@ simple-crypto-wallet/
 ├── package.json
 └── README.md
 ```
+=======
+# Simple-Crypto-Wallet-
+>>>>>>> da05636a66ab1fc77702e8e3882c0de85c4370ca
